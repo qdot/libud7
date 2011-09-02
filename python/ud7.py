@@ -68,6 +68,10 @@ class ud7:
 
         self.ud7.set_configuration()
 
+    def button_read(self):
+        ret = self.ud7.read(self.ep['in'], 64, 0, 1000)
+        print ret
+
     def black_out(self):
         self.send_command("black")
 
@@ -77,12 +81,12 @@ class ud7:
     def turn_off(self):
         self.send_command("turn_off")
 
-    def button_pressed(self):
-        return
-
-    def send_status(self):
+    def check_button_state(self):
         self.send_command("status")
         ret = self.ud7.read(self.ep['in'], 64, 0, 1000)
+        if ret[0xf] == 0x0:
+            return True
+        return False
 
     def send_frame(self, color):
         self.ready_image_update()
@@ -109,14 +113,15 @@ def main():
     # for i in range(0, 5):
     #     dev.send_status()
     #     time.sleep(0.010)
-    dev.send_status()
     dev.turn_on()
     dev.set_backlight(0xff)
-    for i in range(0, 20):
-        dev.send_frame(0xf8)
-        dev.send_frame(0x80)
-        dev.send_status()
-    time.sleep(1.0)
+    # for i in range(0, 20):
+    #     dev.send_frame(0xf8)
+    #     dev.send_frame(0x80)
+    #     dev.send_status()
+    # time.sleep(1.0)
+    print dev.check_button_state()
+    
     # dev.black_out()
     # for i in range(0, 255):
     #     dev.set_backlight(i)
