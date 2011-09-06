@@ -120,6 +120,7 @@ Command Size: 2 bytes
 There are several values of 0xGG and 0xHH:
 
 0xGG Values:
+
 * 0x01 - Screen on (screen whited out), 0xHH is 0
 * 0x02 - Screen 100% black, 0xHH is 0
 * 0x03 - Screen 100% white, 0xHH is 0
