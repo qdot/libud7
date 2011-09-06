@@ -1,0 +1,127 @@
+= UD7 Protocol Documentation
+
+By Kyle Machulis <kyle@nonpolynomial.com>
+Version 1.0, September 5, 2011
+
+== Introduction
+
+The UD7 is a simple cell-phone screen like display, that will render a
+128x128 image. It can be accessed and updated via USB
+messages. Features of hardware/library include:
+
+* Display/update 128x128 16-bit (565) image
+* Update subportions of image
+* Turn device on/off
+* Set display backlight levels
+* Hardware button for interaction
+
+== Protocol Specification
+
+All commands are sent as bulk requests. No control packets are
+required to set up the device.
+
+All out-going commands except for the display information packet are
+prefixed with the follow byte pattern:
+
+.Outgoing Message Prefix
+------
+0x50 0x42 0x54 0x20
+------
+
+Bytes after this are referred to as "the command".
+
+There are usually only 2-6 significant bytes sent as part of the
+message. However, all communication happens in 64-byte packets, so
+much of the end of the packet will be random bytes from previous
+buffers. Expected size for each command is listed in the commands
+section.
+
+For instance, to retrieve the status of the device (a 1-byte command),
+the full packet would look like
+
+------
+0x50 0x42 0x54 0x20 0x07 0xXX 0xXX ...
+------
+
+== Commands
+
+=== Retrieve Status
+
+Command Size: 1 byte
+
+.Outgoing Message
+------
+0x07 
+------
+
+* 0x07 - Retrieve Status Command
+
+Unlike all other commands, the Status command actually receives
+information back from the device.
+
+.Incoming Message
+------
+0x50 0x42 0x54 0x20 0x55 0x44 0x37 0x56 0x31 0x2e 0x30 0x2e 0x30 0x2e 0x31 0xGG
+------
+
+The first 15 bytes spell out the message "PBT UDT7V1.0.0.1".
+
+* 0xGG - State of the button on the back of the device. 0x10 if not
+pressed, 0x00 if pressed.
+
+=== Display Update Preparation
+
+Command Size: 8 bytes
+
+.Out Message
+------
+0x02 0xGG 0xHH 0xII 0xJJ 0xKK 0xLL 0xMM
+------
+
+* 0x02 - Prepare Update Command
+* 0xGG - Unknown - Always 0x00
+* 0xHH - Top limit of drawing rectangle (Range - 0x00 to 0x7f)
+* 0xII - Bottom limit of drawing rectangle (Range - 0x00 or 0xHH to 0x7f)
+* 0xJJ - Left limit of drawing rectangle (Range - 0x00 to 0x7f)
+* 0xKK - Right limit of drawing rectable (Range - 0x00 or 0xJJ to 0x7f)
+* 0xLL - Unknown - Always 0x00
+* 0xMM - Unknown - Always 0x02
+
+The display update command should always be run after a display update
+preparation command is sent.
+
+=== Display Update
+
+Command Size: 32768 bytes
+
+To update the display, a full framebuffer is sent over. There is no
+command prefix for the message, the whole 32k is just sent as a single
+chunk with no pre/postfix to the data. It is expected that the message
+sent before the display update is a display update preparation packet,
+otherwise the display will not update.
+
+The framebuffer is packed in 16-bit RGB (565), meaning the first 5
+bits are the red level, the middle 6 bits are the green level, and the
+last 5 bits are the blue level.
+
+It is not known whether less data can be sent if a subrectangle of the
+display is being updated. The demo programs that the protocol was
+derived from send the full display update at all times.
+
+=== Screen Commands
+
+Command Size: 2 bytes
+
+.Out Message
+------
+0x01 0xGG 0xHH
+------
+
+There are several values of 0xGG and 0xHH:
+
+0xGG Values:
+* 0x01 - Screen on (screen whited out), 0xHH is 0
+* 0x02 - Screen 100% black, 0xHH is 0
+* 0x03 - Screen 100% white, 0xHH is 0
+* 0x04 - Screen off, 0xHH is 0
+* 0x06 - Backlight Level, requires extra argument 0xHH (Range - 0x00 to 0xFF)
