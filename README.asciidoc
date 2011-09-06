@@ -1,0 +1,97 @@
+= libfitbit =
+
+by Kyle Machulis <kyle@nonpolynomial.com>
+
+Nonpolynomial Labs - http://www.nonpolynomial.com
+
+== Description ==
+
+libud7 is a device driver for the UD7 display device. The website for
+the device is at
+
+http://www.gadgetdisplay.com
+
+The device is a simple cell-phone screen like display, that will
+render a 128x128 image. Features of hardware/library include:
+
+* Display/update 128x128 16-bit (565) image
+* Update subportions of image
+* Turn device on/off
+* Set display backlight levels
+* Hardware button for interaction
+
+== Package Information ==
+
+Source repo @ http://www.github.com/qdot/libud7
+
+== Platform Support ==
+
+* Linux - Tested on Ubuntu 11.04
+* OS X - Untested, should work?
+* Windows - Won't work at the moment. Need to figure out which USB
+  library to install.
+
+== Library Requirements ==
+
+* Python - http://www.python.org
+* libusb-1.0 - http://www.libusb.org
+* pyusb 1.0+ - http://sourceforge.net/projects/pyusb/files/
+
+== Platform Cavaets ==
+
+=== Linux ===
+
+You'll need to either run as root or set up a udev rule to switch out
+permissions on the base VID/PID. We'll hopefully have a udev rule
+checked in shortly.
+
+=== OS X ===
+
+None known yet. 
+
+=== Windows ===
+
+Don't even know if it works there yet.
+
+== Future Plans ==
+
+* Windows support
+* Implement library in C
+
+== License ==
+
+---------------------
+Copyright (c) 2011, Kyle Machulis/Nonpolynomial Labs
+All rights reserved.
+
+Redistribution and use in source and binary forms, 
+with or without modification, are permitted provided 
+that the following conditions are met:
+
+   * Redistributions of source code must retain the 
+     above copyright notice, this list of conditions 
+     and the following disclaimer.
+   * Redistributions in binary form must reproduce the 
+     above copyright notice, this list of conditions and 
+     the following disclaimer in the documentation and/or 
+     other materials provided with the distribution.
+   * Neither the name of the Nonpolynomial Labs nor the names 
+     of its contributors may be used to endorse or promote 
+     products derived from this software without specific 
+     prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
+CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR 
+OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
+EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+---------------------
+
